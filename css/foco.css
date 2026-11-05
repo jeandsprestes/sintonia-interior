@@ -1,0 +1,591 @@
+/* Estilos das telas do dia pesado: Estou no limite, Descarregar a cabeça e Experimento (T19 a T21).
+   Telas de foco: calmas, com muito espaço, nada que pisque. Cores só pelos tokens de 4.1; movimento de 4.8;
+   com html.menos-movimento, só opacidade em 200 ms. A base da camada do limite está em app.css. */
+
+/* ------------------------------------------------------------------ peças comuns (js/foco.js) */
+
+.foco-palco { display: grid; grid-template-columns: minmax(0, 1fr); }
+.foco-vista { grid-area: 1 / 1; width: 100%; min-width: 0; display: flex; flex-direction: column; }
+.foco-vista.entrando { animation: entrar var(--d-tela) var(--ease-padrao) both; }
+.foco-vista.saindo { animation: sair 180ms var(--ease-padrao) both; pointer-events: none; }
+.menos-movimento .foco-vista.entrando { animation: aparecer 200ms linear both; }
+.menos-movimento .foco-vista.saindo { animation: sair 200ms linear both; }
+
+/* O anel de tempo (o minuto da janela, o Falar do Desabafar). */
+.foco-anel {
+  --anel: var(--anel-padrao, 200);
+  position: relative;
+  flex: none;
+  width: calc(var(--anel) * 1px);
+  height: calc(var(--anel) * 1px);
+  color: var(--tinta);
+}
+.foco-anel-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.foco-anel-fora { fill: none; stroke: var(--linha); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+.foco-anel-cheio {
+  fill: none;
+  stroke: var(--cobre);
+  stroke-width: calc(320px / var(--anel));
+  stroke-linecap: round;
+  transition: opacity 200ms linear;
+}
+.foco-anel-onda {
+  fill: none;
+  stroke: var(--cobre-claro);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transform-box: view-box;
+  animation: foco-agua 7s var(--ease-respiro) infinite alternate;
+}
+.foco-anel-onda-2 { animation-delay: -2.4s; }
+.foco-anel-onda-3 { animation-delay: -4.9s; }
+@keyframes foco-agua { from { transform: translateX(-4px); } to { transform: translateX(4px); } }
+.menos-movimento .foco-anel-onda { animation: none; }
+.foco-anel-figura { position: absolute; inset: 15%; display: flex; align-items: center; justify-content: center; }
+.foco-anel-figura svg { width: 100%; height: 100%; }
+
+/* A onda que se desenha (Soltar e Deixar ir). */
+.foco-onda { display: block; width: 100%; height: auto; overflow: visible; }
+.foco-onda-traco { fill: none; stroke: var(--cobre-claro); stroke-width: 1.5px; stroke-linecap: round; stroke-linejoin: round; }
+
+/* A seta do par antes e depois (de 7 para 4). */
+.foco-seta { display: inline-block; width: 1.125em; height: .75em; margin: 0 .3em; vertical-align: .02em; overflow: visible; }
+.foco-seta path { fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Botões empilhados das telas de foco. */
+.limite-botoes,
+.foco-botoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e3);
+  width: 100%;
+}
+.limite-botoes .botao-principal,
+.limite-botoes .botao-secundario,
+.foco-botoes .botao-principal,
+.foco-botoes .botao-secundario { width: 100%; max-width: 22.5rem; }
+.limite-botoes .link, .foco-botoes .link { margin-top: calc(-1 * var(--e1)); }
+
+/* ================================================================== T19 · Estou no limite */
+
+.limite-rola {
+  position: relative;
+  grid-template-rows: minmax(100%, auto);
+  /* O fim da área que rola some aos poucos antes do cartão do CVV, em vez de aparecer cortado no meio da linha. */
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent);
+  mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent);
+}
+.limite-rola::-webkit-scrollbar-thumb { background-color: var(--linha-forte); }
+
+/* Entrada */
+.limite-entrada { padding-top: var(--e2); padding-bottom: var(--e2); }
+.limite-entrada .titulo { color: var(--tinta); }
+.limite-linha { max-width: 30em; }
+
+/* O que te faz bem (as palavras da própria pessoa, do Dia 5) */
+.limite-faz-bem {
+  margin-top: var(--e6);
+  padding: var(--e1) 0 var(--e1) var(--e4);
+  border-left: 2px solid var(--cobre);
+}
+.limite-faz-bem .rotulo { color: var(--cobre-forte); margin-bottom: var(--e2); }
+.limite-faz-bem-texto { font-size: 1rem; line-height: 1.5rem; color: var(--suave); }
+.limite-faz-bem-lista { margin-top: var(--e2); display: flex; flex-direction: column; gap: var(--e1); }
+.limite-faz-bem-lista li {
+  position: relative;
+  padding-left: 1.125rem;
+  font: italic 400 1.125rem/1.625rem var(--f-display);
+  font-optical-sizing: auto;
+  color: var(--tinta);
+}
+.limite-faz-bem-lista li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .78em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cobre);
+}
+.limite-faz-bem-linha { margin-top: var(--e2); font-size: 1rem; line-height: 1.5rem; color: var(--tinta); }
+.limite-faz-bem-lista + .limite-faz-bem-linha { margin-top: var(--e3); }
+
+/* Respirar comigo */
+.limite-vista-respirar { justify-content: center; }
+.limite-respirar { padding-top: var(--e3); padding-bottom: var(--e3); }
+.limite-respirar-circulo { display: flex; justify-content: center; }
+.limite-respirar-pe {
+  display: grid;
+  width: 100%;
+  margin-top: var(--e5);
+  min-height: 6.5rem;
+}
+.limite-respirar-pe > * { grid-area: 1 / 1; }
+.limite-respirar-apoio {
+  margin: 0 auto;
+  align-self: start;
+  text-align: center;
+  transition: opacity 600ms linear;
+}
+.limite-respirar-apoio.sumiu { opacity: 0; }
+.limite-respirar-escolhas {
+  margin-top: 0;
+  align-self: start;
+  animation: none;
+  opacity: 0;
+  transition: opacity 900ms var(--ease-padrao);
+}
+.limite-respirar-escolhas.visivel { opacity: 1; }
+.limite-respirar-escolhas .botao-principal { max-width: 20rem; }
+.menos-movimento .limite-respirar-escolhas,
+.menos-movimento .limite-respirar-apoio { transition-duration: 200ms; }
+
+/* Uma frase para agora */
+.limite-vista-frase { justify-content: center; align-items: center; text-align: center; }
+.limite-frase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 11rem;
+  padding: var(--e4) 0;
+}
+.limite-frase.entra { animation: aparecer 600ms var(--ease-padrao) both; }
+.menos-movimento .limite-frase.entra { animation: aparecer 200ms linear both; }
+.limite-frase-rotulo { margin-bottom: var(--e3); color: var(--cobre-forte); }
+.limite-frase-texto { max-width: 18ch; color: var(--tinta); }
+.limite-frase-acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e1);
+  width: 100%;
+  margin-top: var(--e5);
+}
+.limite-frase-acoes .botao-principal { max-width: 20rem; }
+.limite-frase-guardar { display: flex; justify-content: center; min-height: 2.75rem; }
+.link.link-pequeno { font-size: .875rem; }
+.limite-frase-guardada {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 2.75rem;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--suave);
+}
+.limite-frase-check { display: inline-flex; color: var(--cobre-forte); }
+.limite-frase-check svg { width: 14px; height: 14px; }
+
+/* Desabafar */
+.limite-vista-desabafar { padding-top: var(--e2); }
+.limite-desabafar-opcoes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--e3);
+  margin-top: var(--e5);
+}
+.limite-desabafar-opcao { align-items: center; text-align: center; min-height: 4.5rem; }
+
+/* Falar */
+/* Em cima, e não no meio: o que aparece depois (a explicação, a gravação) vem embaixo, sem empurrar nada. */
+.limite-vista-falar { align-items: center; text-align: center; padding: var(--e4) 0 var(--e2); }
+.limite-falar-figura { display: flex; justify-content: center; }
+.limite-falar-anel { --anel: 168; }
+.limite-falar-texto { margin-top: var(--e5); max-width: 22rem; color: var(--tinta); text-wrap: balance; }
+.limite-falar-status { margin-top: var(--e5); display: flex; flex-direction: column; align-items: center; gap: var(--e1); }
+.limite-falar-gravando {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e2);
+  font: 600 1rem/1.5rem var(--f-texto);
+  color: var(--tinta);
+}
+.limite-falar-ponto { width: 8px; height: 8px; border-radius: 50%; background: var(--cobre); opacity: calc(.45 + var(--voz, 1) * .55); transition: opacity 90ms linear; }
+.limite-falar-tempo {
+  font: 300 2.25rem/1 var(--f-display);
+  font-optical-sizing: auto;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--tinta);
+}
+.limite-falar-aviso { margin-top: var(--e2); min-height: 0; text-align: center; }
+.limite-falar-aviso:empty { display: none; }
+.limite-falar-controles { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: var(--e5); }
+.limite-falar-controles .botao-principal { max-width: 20rem; }
+.limite-falar-chave {
+  width: 100%;
+  max-width: 22.5rem;
+  margin-top: var(--e4);
+  padding-top: var(--e3);
+  border-top: 1px solid var(--linha);
+  text-align: left;
+}
+.limite-falar-explicacao,
+.limite-falar-mensagem {
+  width: 100%;
+  max-width: 22.5rem;
+  margin-top: var(--e3);
+  padding: var(--e4) 1.125rem;
+  background: var(--papel);
+  border-radius: var(--raio-campo);
+  text-align: left;
+}
+.limite-falar-explicacao .texto { font-size: 1rem; line-height: 1.5625rem; }
+.limite-falar-explicacao .botao-secundario { margin-top: var(--e3); width: 100%; }
+.limite-falar-mensagem { font-size: 1rem; line-height: 1.5625rem; color: var(--tinta); }
+.limite-falar-depois { width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: var(--e5); }
+.limite-falar-pergunta { max-width: 20ch; margin-bottom: var(--e5); }
+/* Gravando: o anel acompanha o volume da voz; com menos movimento, só a opacidade. */
+.limite-vista-falar.gravando .foco-anel-cheio {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(calc(.88 + var(--voz, 0) * .14));
+  transition: transform 90ms linear, opacity 90ms linear;
+}
+.menos-movimento .limite-vista-falar.gravando .foco-anel-cheio {
+  transform: rotate(-90deg);
+  opacity: calc(.35 + var(--voz, 0) * .65);
+}
+.limite-vista-falar.gravando .foco-anel-onda { animation-duration: 4.5s; }
+
+/* Escrever */
+.limite-vista-escrever { padding-top: var(--e4); }
+.limite-escrever-campo { min-height: 13rem; }
+.limite-vista-escrever .limite-botoes { margin-top: var(--e5); }
+.limite-vista-escrito { padding-top: var(--e4); align-items: center; text-align: center; }
+.limite-escrito-caixa { width: 100%; }
+.limite-escrito {
+  max-height: 12rem;
+  overflow: hidden;
+  padding: var(--e4) 1.125rem;
+  background: var(--papel);
+  border-radius: var(--raio-campo);
+  text-align: left;
+  white-space: pre-wrap;
+  font-size: 1rem;
+  line-height: 1.625rem;
+  color: var(--tinta);
+  transition: transform 1000ms var(--ease-traco), opacity 1000ms var(--ease-padrao);
+}
+.limite-escrito.longo {
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent);
+}
+.limite-escrito.descendo { transform: translateY(12px); opacity: 0; }
+.limite-vista-escrito .limite-botoes { transition: opacity 600ms var(--ease-padrao); }
+.limite-vista-escrito.deixando .limite-botoes { opacity: .35; pointer-events: none; }
+.menos-movimento .limite-escrito { transition: opacity 200ms linear; }
+.menos-movimento .limite-escrito.descendo { transform: none; }
+.limite-escrito-onda { margin-top: var(--e2); }
+.limite-escrito-pergunta { margin-top: var(--e5); max-width: 20ch; }
+.limite-vista-escrito .limite-botoes { margin-top: var(--e5); }
+
+/* Como está agora? e a resposta */
+.limite-vista-como { padding-top: var(--e4); }
+.limite-como-mensagem {
+  margin-bottom: var(--e5);
+  padding-left: var(--e4);
+  border-left: 2px solid var(--cobre);
+  font: italic 400 1.125rem/1.625rem var(--f-display);
+  font-optical-sizing: auto;
+  color: var(--tinta);
+}
+.limite-como-opcao { min-height: 3.75rem; }
+.limite-vista-resposta { padding-top: var(--e5); }
+.limite-vista-resposta > .lede-display { color: var(--tinta); max-width: 22ch; }
+.limite-vista-resposta .limite-botoes { margin-top: var(--e6); align-items: stretch; }
+.limite-vista-resposta .limite-botoes .link { align-self: center; }
+.limite-vista-resposta .limite-opcoes { margin-top: var(--e5); }
+
+/* O cartão do CVV com a sombra de 3.0 (a da barra presa ao pé): o que rola passa por baixo dele. */
+.camada-limite .cartao-cvv { box-shadow: var(--sombra-folha); }
+
+/* ------------------------------------------------------------------ o limite no computador */
+
+@media (min-width: 960px) {
+  .camada-limite .camada-alto { padding-inline: 2rem; height: calc(var(--altura-barra) + var(--topo-extra) + 16px); padding-top: calc(var(--topo-extra) + 16px); }
+  .limite-rola { padding-top: var(--e5); }
+  .camada-limite .respiracao-circulo { width: min(320px, 34vh); height: min(320px, 34vh); }
+  .limite-falar-anel { --anel: 200; }
+}
+
+/* ------------------------------------------------------------------ o limite em telas baixas */
+
+@media (max-height: 760px) {
+  .camada-limite .respiracao-circulo { width: min(200px, 26vh); height: min(200px, 26vh); }
+  .limite-falar-anel { --anel: 132; }
+}
+@media (max-height: 640px) {
+  .limite-entrada { padding-top: 0; }
+  .camada-limite .respiracao-circulo { width: min(150px, 22vh); height: min(150px, 22vh); }
+  .limite-respirar { padding-top: 0; padding-bottom: 0; }
+  .limite-respirar-pe { margin-top: var(--e3); min-height: 3.25rem; }
+  .limite-respirar-escolhas { flex-direction: row; justify-content: center; align-items: center; gap: var(--e3); }
+  .limite-respirar-escolhas .botao-principal { width: auto; padding-inline: 1.25rem; white-space: nowrap; }
+  .limite-respirar-escolhas .link { white-space: nowrap; }
+  .limite-frase { min-height: 7rem; padding: var(--e2) 0; }
+  .limite-frase-acoes { margin-top: var(--e3); }
+  .limite-falar-anel { --anel: 96; }
+  .limite-falar-texto { margin-top: var(--e3); font-size: 1.0625rem; line-height: 1.625rem; }
+  .limite-falar-controles, .limite-falar-status, .limite-falar-depois { margin-top: var(--e3); }
+  .limite-escrever-campo { min-height: 8rem; }
+  .camada-limite .cartao-cvv-texto { font-size: .875rem; line-height: 1.3125rem; }
+}
+/* Celular baixo (320 x 568): o círculo do Falar sai, como o autoabraço da entrada, para "Terminei" caber
+   acima do cartão do CVV; gravando, o ponto ao lado de "Gravando só neste aparelho." acompanha a voz. */
+@media (max-height: 600px) {
+  .limite-falar-figura { display: none; }
+  .limite-vista-falar { padding-top: var(--e3); }
+  .limite-falar-texto, .limite-falar-status { margin-top: 0; }
+  /* A entrada e o cartão apertam um pouco, para "Respirar comigo" caber inteiro acima do cartão (também com Letra maior). */
+  .camada-limite .limite-entrada .titulo { font-size: 1.5rem; line-height: 2rem; }
+  .limite-linha { margin-top: var(--e1); }
+  .limite-opcoes { margin-top: var(--e3); }
+  .camada-limite .respiracao-circulo { width: min(150px, 18vh); height: min(150px, 18vh); }
+  .limite-respirar-escolhas { flex-wrap: wrap; row-gap: 0; }
+  .camada-limite .cartao-cvv { padding-top: var(--e2); padding-bottom: calc(var(--e3) + env(safe-area-inset-bottom)); }
+  .camada-limite .cartao-cvv .rotulo { margin-bottom: 2px; }
+  .camada-limite .cartao-cvv-dentro .botao-principal { min-height: 2.75rem; margin-top: var(--e2); }
+}
+
+/* ================================================================== T20 · Descarregar a cabeça (e a P09) */
+
+.desc { width: 100%; }
+.desc-tela { padding-top: var(--e4); }
+.tocador-ferramenta > .desc { max-width: var(--coluna); margin-inline: auto; }
+/* No tocador, a ferramenta fica no alto: a lista cresce para baixo, sem empurrar o título. */
+.tocador-centro:has(.desc) { justify-content: flex-start; padding-top: var(--e2); }
+.desc-rotulo { margin-bottom: var(--e3); }
+.desc-titulo { max-width: 20ch; }
+.desc-linha { margin-top: var(--e3); }
+
+/* Despejar */
+.desc-itens { display: flex; flex-direction: column; margin-top: var(--e5); }
+.desc-itens:empty { display: none; }
+.desc-item {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  min-height: 3.25rem;
+  border-bottom: 1px solid var(--linha);
+}
+.desc-item:first-child { border-top: 1px solid var(--linha); }
+.desc-item-texto { flex: 1 1 auto; min-width: 0; padding: .6875rem 0; font-size: 1.0625rem; line-height: 1.5rem; color: var(--tinta); overflow-wrap: anywhere; }
+.desc-tirar { color: var(--suave); margin-right: -10px; }
+.desc-tirar svg { width: 20px; height: 20px; }
+.desc-item.entrando { animation: entrar var(--d-abrir) var(--ease-padrao) both; }
+.desc-item.saindo { animation: sair 200ms var(--ease-padrao) both; }
+.menos-movimento .desc-item.entrando { animation: aparecer 200ms linear both; }
+.desc-campo-linha { display: flex; gap: var(--e2); margin-top: var(--e5); }
+.desc-itens:not(:empty) + .desc-campo-linha { margin-top: var(--e4); }
+.desc-campo { flex: 1 1 auto; min-width: 0; }
+.desc-adicionar { flex: none; min-height: 3.25rem; padding-inline: 1.125rem; }
+.desc-adicionar:disabled { border-color: var(--linha-forte); color: var(--suave); }
+.desc-apoios { display: flex; flex-direction: column; gap: 2px; margin-top: var(--e2); min-height: 1.375rem; }
+.desc-contador { font-size: .875rem; line-height: 1.375rem; color: var(--mudo); font-variant-numeric: tabular-nums; }
+.desc-contador:empty { display: none; }
+.desc-parado:empty { display: none; }
+.desc-parado { animation: aparecer 900ms var(--ease-padrao) both; }
+.desc-acoes { margin-top: var(--e6); }
+
+/* Separar */
+.desc-separar .desc-rotulo { margin-bottom: var(--e4); }
+.desc-cartao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e3);
+  min-height: 10rem;
+  padding: var(--e5) var(--e5) var(--e6);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-cartao);
+  text-align: center;
+}
+.desc-separar-contador { color: var(--suave); }
+.desc-separar-item { max-width: 22ch; overflow-wrap: anywhere; color: var(--tinta); }
+.desc-cartao.troca .desc-separar-item { animation: entrar var(--d-tela) var(--ease-padrao) both; }
+.menos-movimento .desc-cartao.troca .desc-separar-item { animation: aparecer 200ms linear both; }
+.desc-grupos { display: flex; flex-direction: column; gap: var(--e3); margin-top: var(--e5); }
+.desc-grupo { min-height: 4.75rem; padding: .875rem 1.25rem; }
+.desc-grupo .cartao-escolha-desc { margin-top: 1px; }
+.desc-tecla {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding-top: .15em;
+  border: 1px solid var(--linha);
+  border-radius: 8px;
+  font: 600 .75rem/1 var(--f-rotulo);
+  color: var(--suave);
+}
+.desc-voltar-linha { display: flex; justify-content: center; min-height: 2.75rem; margin-top: var(--e3); }
+
+/* Resultado */
+.desc-resultado .desc-titulo { margin-bottom: var(--e1); }
+.desc-grupo-resultado { margin-top: var(--e6); }
+.desc-grupo-titulo { margin-bottom: var(--e3); color: var(--tinta); }
+.desc-fazer-lista { display: flex; flex-direction: column; gap: var(--e2); }
+.desc-fazer-item { min-height: 3.75rem; padding: .75rem 1rem .75rem 1.125rem; }
+.desc-fazer-item .cartao-escolha-texto { flex: 1 1 auto; }
+.desc-fazer-texto { font-size: 1.0625rem; line-height: 1.5rem; color: var(--tinta); overflow-wrap: anywhere; }
+.desc-proximo-rotulo { display: none; margin-bottom: 2px; font-size: .6875rem; line-height: 1rem; }
+.desc-fazer-item[aria-checked="true"] .desc-proximo-rotulo { display: block; }
+.desc-marca {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--suave);
+  border-radius: 50%;
+  color: var(--cobre);
+  transition: border-color var(--d-estado) var(--ease-padrao);
+}
+.desc-marca svg { width: 22px; height: 22px; opacity: 0; transform: scale(.6); transition: opacity var(--d-estado) var(--ease-padrao), transform 240ms var(--ease-padrao); }
+.desc-fazer-item[aria-checked="true"] .desc-marca { border-color: transparent; }
+.desc-fazer-item[aria-checked="true"] .desc-marca svg { opacity: 1; transform: none; }
+.menos-movimento .desc-marca svg { transform: none; }
+.desc-grupo-apoio { margin-top: var(--e3); }
+/* O abre-fecha corta o que passa da borda: o respiro de 6 px deixa o contorno de foco do campo inteiro. */
+.desc-gesto-dentro { padding: var(--e4) 6px 6px; margin: 0 -6px -6px; }
+.desc-lista li {
+  padding: .6875rem 0;
+  border-bottom: 1px solid var(--linha);
+  font-size: 1.0625rem;
+  line-height: 1.5rem;
+  color: var(--tinta);
+  overflow-wrap: anywhere;
+}
+.desc-lista li:first-child { border-top: 1px solid var(--linha); }
+.soltando .desc-lista-soltar li { animation: desc-descer 1000ms var(--ease-traco) both; }
+.soltando .desc-lista-soltar li:nth-child(2) { animation-delay: 60ms; }
+.soltando .desc-lista-soltar li:nth-child(n+3) { animation-delay: 120ms; }
+@keyframes desc-descer { to { transform: translateY(12px); opacity: 0; } }
+.menos-movimento .soltando .desc-lista-soltar li { animation: sair 200ms linear both; }
+.desc-soltar-caixa { position: relative; }
+.desc-soltar-lista { position: relative; }
+.desc-soltar-lista.vazia { height: 8px; }
+.desc-soltar-lista .desc-onda { position: absolute; left: 0; right: 0; bottom: -18px; }
+.desc-soltar-palco { display: grid; margin-top: var(--e5); }
+.desc-soltar-palco > * { grid-area: 1 / 1; min-width: 0; }
+.desc-soltar-acoes { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e2); transition: opacity 600ms var(--ease-padrao); }
+.soltando .desc-soltar-acoes { opacity: 0; pointer-events: none; }
+.desc-solto-frase {
+  align-self: start;
+  max-width: 24ch;
+  font: italic 400 1.25rem/1.75rem var(--f-display);
+  font-optical-sizing: auto;
+  color: var(--tinta);
+}
+.desc-solto-frase:empty { display: none; }
+.desc-solto-frase.aparece { animation: aparecer 900ms var(--ease-padrao) 200ms both; }
+.menos-movimento .desc-solto-frase.aparece { animation: aparecer 200ms linear both; }
+.desc-soltar { min-width: 9rem; }
+.desc-concluir { margin-top: var(--e7); }
+.desc-copiar { margin-bottom: var(--e1); }
+
+/* ================================================================== T21 · Experimento de 1 minuto */
+
+.exp-comeco { padding-top: var(--e6); }
+.exp-comeco .titulo { margin-top: var(--e3); max-width: 16ch; }
+.exp-comeco-texto { margin-top: var(--e4); }
+.exp-comeco-apoio { margin-top: var(--e3); }
+.exp-acao { margin-top: var(--e6); width: 100%; }
+.exp-comeco .exp-acao { margin-top: var(--e7); }
+
+.exp-escolha { padding-top: var(--e6); }
+.exp-escolha .titulo { max-width: 18ch; }
+.exp-opcoes { display: flex; flex-direction: column; gap: var(--e3); margin-top: var(--e5); }
+.exp-opcao { min-height: 5.25rem; padding: 1rem 1.25rem; gap: 1rem; }
+
+.exp-minuto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: calc(100dvh - var(--altura-barra) - env(safe-area-inset-top) - var(--topo-extra) - env(safe-area-inset-bottom) - var(--e7));
+  padding-bottom: var(--e6);
+}
+.exp-minuto-figura { display: flex; align-items: center; justify-content: center; }
+.exp-anel { --anel: 200; }
+.exp-minuto-texto { margin-top: var(--e6); max-width: 18ch; }
+.exp-minuto-apoio { margin-top: var(--e4); min-height: 1.6875rem; color: var(--suave); opacity: 0; transition: opacity 600ms linear; }
+.exp-minuto-apoio.aparece { opacity: 1; }
+.menos-movimento .exp-minuto-apoio { transition-duration: 200ms; }
+.exp-minuto-figura, .exp-minuto-texto { transition: opacity var(--d-estado) linear; }
+.exp-minuto.pausado .exp-minuto-figura,
+.exp-minuto.pausado .exp-minuto-texto,
+.exp-minuto.pausado .exp-minuto-apoio { opacity: 0; }
+
+.exp-resultado { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: var(--e7); }
+.exp-par { width: 100%; max-width: 22rem; }
+.exp-par .regua-par { max-width: none; height: 32px; margin: 0; }
+.exp-par .regua-par-linha { top: 15px; background: var(--linha-forte); }
+.exp-par .regua-par-liga { top: 15px; height: 2px; }
+.exp-par .regua-par-antes, .exp-par .regua-par-depois { top: 9px; width: 14px; height: 14px; margin-left: -7px; }
+.exp-par-numeros { display: flex; justify-content: space-between; margin-top: 2px; padding: 0 2px; font-size: .875rem; line-height: 1.25rem; color: var(--suave); font-variant-numeric: tabular-nums; }
+.exp-par-valores { position: relative; height: 1.75rem; }
+.exp-par-valor {
+  position: absolute;
+  bottom: 2px;
+  transform: translateX(-50%);
+  font: 300 1.5rem/1 var(--f-display);
+  font-optical-sizing: auto;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--tinta);
+}
+.exp-par-valor-antes { color: var(--suave); }
+.exp-resultado-texto { margin-top: var(--e5); max-width: 22ch; color: var(--tinta); }
+.exp-resultado-apoio { margin-top: var(--e3); max-width: 30ch; color: var(--tinta); }
+.exp-testes { width: 100%; max-width: 22rem; margin-top: var(--e6); text-align: left; }
+.exp-testes .rotulo { margin-bottom: var(--e2); }
+.exp-teste {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding: .625rem 0;
+  border-bottom: 1px solid var(--linha);
+  font-size: 1.0625rem;
+  line-height: 1.5rem;
+  color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+}
+.exp-teste:first-child { border-top: 1px solid var(--linha); }
+.exp-teste-dia { color: var(--suave); }
+.exp-teste-par { display: inline-flex; align-items: center; font-weight: 600; }
+.exp-medir {
+  width: 100%;
+  max-width: 22.5rem;
+  margin-top: var(--e6);
+  padding: var(--e4) 1.125rem;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-cartao);
+  transition: opacity 300ms linear;
+}
+.exp-medir.respondido { opacity: 0; }
+.exp-medir-pergunta { margin-inline: auto; max-width: 24ch; }
+.exp-medir-botoes { display: flex; gap: var(--e2); margin-top: var(--e3); }
+.exp-medir-botoes .botao-secundario { flex: 1 1 0; padding-inline: .75rem; }
+.exp-resultado .exp-acao { display: flex; justify-content: center; }
+
+@media (min-width: 960px) {
+  .exp-anel { --anel: 260; }
+}
+@media (max-height: 640px) {
+  .exp-anel { --anel: 150; }
+  .exp-minuto-texto { margin-top: var(--e4); }
+}

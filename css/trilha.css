@@ -1,0 +1,477 @@
+/* Estilos das telas da trilha e das boas-vindas (T01 a T04, T13 a T15) e das ferramentas mapa e caminho.
+   Prefixos: bv- (boas-vindas), trilha- (T13 e as folhas), dia-trilha- (T14), cam- (T15), mapa- (o mapa
+   de cuidado no Dia 7). Cores só pelos tokens de 4.1; movimento pelos tokens de 4.8; com menos movimento,
+   só opacidade em 200 ms. */
+
+/* ================================================================== T01 a T04 · Boas-vindas */
+
+.bv {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 30rem;
+  margin-inline: auto;
+  min-height: calc(100dvh - var(--altura-barra) - env(safe-area-inset-top) - var(--topo-extra) - var(--e7) - env(safe-area-inset-bottom));
+  touch-action: pan-y;
+}
+
+/* ---------------------------------------------------------------- T01 · Abertura */
+
+.bv-abertura { align-items: center; text-align: center; }
+.bv-capa {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--e5) 0 var(--e7);
+}
+.bv-lotus { display: flex; justify-content: center; color: var(--tinta); }
+.bv-nome { margin-top: var(--e6); text-wrap: balance; }
+.bv-linha {
+  margin-top: var(--e4);
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 340;
+  font-size: 1.3125rem;
+  line-height: 1.875rem;
+  color: var(--cobre);
+  text-wrap: balance;
+}
+.bv-acoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e1);
+  width: 100%;
+}
+.bv-rodape {
+  margin-top: var(--e5);
+  font-size: .6875rem;
+  line-height: 1rem;
+  letter-spacing: .18em;
+  color: var(--suave);
+  text-wrap: balance;
+}
+
+/* A primeira chegada: a lótus se desenha (2,4 s) e o resto aparece devagar, um de cada vez. */
+.bv-chegando .bv-entra { animation: bv-subir 900ms var(--ease-padrao) backwards; }
+.bv-chegando .bv-nome { animation-delay: 850ms; }
+.bv-chegando .bv-linha { animation-delay: 1100ms; }
+.bv-chegando .bv-acoes { animation-delay: 1450ms; }
+.bv-chegando .bv-rodape { animation-delay: 1750ms; }
+@keyframes bv-subir { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.menos-movimento .bv-chegando .bv-entra { animation: aparecer 200ms linear backwards; animation-delay: 0ms; }
+
+/* ---------------------------------------------------------------- T02 a T04 · os quadros */
+
+.bv-pagina { padding-top: var(--e4); }
+.bv-corpo { flex: 1 1 auto; }
+.bv-titulo { margin-top: var(--e3); }
+.bv-lista { display: flex; flex-direction: column; margin-top: var(--e6); }
+.bv-item {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: baseline;
+  padding: var(--e4) 0;
+  border-top: 1px solid var(--linha);
+}
+.bv-item:last-child { border-bottom: 1px solid var(--linha); }
+.bv-numero { color: var(--cobre); white-space: nowrap; }
+.bv-item-texto { font-size: 1.0625rem; line-height: 1.6875rem; color: var(--tinta); text-wrap: pretty; }
+
+.bv-pe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e1);
+  padding-top: var(--e6);
+}
+.bv-pontos { display: flex; align-items: center; gap: 10px; margin-bottom: var(--e4); }
+.bv-ponto {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--linha);
+  transition: background-color var(--d-estado) var(--ease-padrao);
+}
+.bv-ponto.atual { background: var(--tinta); }
+
+/* T03 · Tom */
+.bv-tons { display: flex; flex-direction: column; gap: var(--e3); margin-top: var(--e6); }
+.bv-cartao-tom { min-height: 5.75rem; padding: 1.125rem 2.75rem 1.125rem 1.25rem; }
+.bv-cartao-tom .cartao-escolha-nome {
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.75rem;
+}
+.bv-cartao-tom .cartao-escolha-desc { margin-top: 3px; }
+.bv-cartao-tom::after { right: 1.125rem; }
+.bv-exemplo { min-height: 4.75rem; margin-top: var(--e5); }
+.bv-exemplo-frase {
+  padding: var(--e1) 0 var(--e1) var(--e4);
+  border-left: 2px solid var(--cobre);
+  font-size: 1.3125rem;
+  line-height: 1.875rem;
+  color: var(--tinta);
+}
+.bv-exemplo-entra { animation: aparecer var(--d-estado) linear both; }
+.bv-apoio { margin-top: var(--e3); }
+
+/* Telas baixas (320 x 568): os espaços apertam, para a abertura caber sem rolar. */
+@media (max-height: 700px) {
+  .bv-capa { padding: var(--e3) 0 var(--e5); }
+  .bv-nome { margin-top: var(--e5); }
+  .bv-linha { margin-top: var(--e3); }
+  .bv-rodape { margin-top: var(--e4); }
+  .bv-lista { margin-top: var(--e5); }
+  .bv-pe { padding-top: var(--e5); }
+  .bv-pontos { margin-bottom: var(--e3); }
+}
+
+/* No computador, as boas-vindas abrem por cima do caderno (foco), centradas. */
+@media (min-width: 960px) {
+  .bv { min-height: calc(100vh - var(--altura-barra) - var(--topo-extra) - 16px - 3rem); }
+  .bv-pagina { padding-top: var(--e6); }
+}
+
+/* ================================================================== T13 · Trilha */
+
+.trilha { --trilha-fundo: var(--fundo); padding-top: var(--e2); }
+@media (min-width: 960px) {
+  .pagina-direita .trilha { --trilha-fundo: var(--papel); }
+}
+
+.trilha-cabeca {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "texto flor" "linha linha";
+  column-gap: var(--e4);
+  align-items: center;
+}
+.trilha-cabeca-texto { grid-area: texto; }
+.trilha-titulo { margin-top: var(--e2); }
+.trilha-flor {
+  grid-area: flor;
+  justify-self: end;
+  margin-right: -4px;
+  border-radius: 50%;
+  color: var(--tinta);
+  transition: transform var(--d-toque) var(--ease-padrao);
+}
+.trilha-flor:active { transform: scale(.985); }
+.trilha-flor:focus-visible { outline-offset: 4px; border-radius: 50%; }
+.trilha-linha { grid-area: linha; margin-top: var(--e4); color: var(--suave); }
+@media (max-width: 389.98px) {
+  .trilha-cabeca { grid-template-columns: minmax(0, 1fr); grid-template-areas: "texto" "flor" "linha"; }
+  .trilha-flor { justify-self: center; margin: var(--e4) 0 0; }
+}
+/* No computador, a flor já está na página esquerda, em 240 px: a Trilha não a repete ao lado do título. */
+@media (min-width: 960px) {
+  .trilha-cabeca { grid-template-columns: minmax(0, 1fr); grid-template-areas: "texto" "linha"; }
+  .trilha-flor { display: none; }
+}
+
+/* O alto: começar, a volta depois de dias ou a trilha concluída. */
+.trilha-topo { margin-top: var(--e5); }
+.trilha-topo .botao-principal { max-width: none; }
+.trilha-espera {
+  padding: var(--e1) 0 var(--e1) var(--e4);
+  border-left: 2px solid var(--cobre);
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.1875rem;
+  line-height: 1.6875rem;
+  color: var(--tinta);
+}
+.trilha-concluida {
+  padding: 1.375rem 1.25rem 1.125rem;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-cartao);
+}
+.trilha-concluida-texto {
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 1.375rem;
+  line-height: 1.75rem;
+  color: var(--tinta);
+  text-wrap: balance;
+}
+.trilha-topo-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2) var(--e5); margin-top: var(--e4); }
+
+/* O caminho: o fio (desenhado depois do layout) passa por trás dos nós e dos ícones das fases. */
+.trilha-caminho { position: relative; margin-top: var(--e7); }
+.trilha-fio { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.trilha-fio path {
+  fill: none;
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.trilha-fio-perceber { stroke: var(--cobre-claro); }
+.trilha-fio-compreender { stroke: var(--cobre); }
+.trilha-fio-escolher { stroke: var(--tinta); }
+
+.trilha-dias { position: relative; display: flex; flex-direction: column; }
+.trilha-dia { position: relative; padding-bottom: var(--e6); }
+.trilha-dia:last-child { padding-bottom: 0; }
+
+.trilha-fase {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  column-gap: var(--e4);
+  align-items: center;
+  margin-bottom: var(--e5);
+}
+.trilha-dia:not(:first-child) .trilha-fase { margin-top: var(--e4); }
+.trilha-fase-icone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--trilha-fundo);
+}
+.trilha-fase-icone svg { width: 20px; height: 20px; }
+.trilha-dia[data-fase="perceber"] .trilha-fase-icone { color: var(--cobre); }
+.trilha-dia[data-fase="compreender"] .trilha-fase-icone { color: var(--cobre); }
+.trilha-dia[data-fase="escolher"] .trilha-fase-icone { color: var(--tinta); }
+.trilha-fase-rotulo { color: var(--cobre); }
+
+.trilha-no-botao {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  column-gap: var(--e4);
+  align-items: start;
+  width: 100%;
+  text-align: left;
+  border-radius: 14px;
+  -webkit-tap-highlight-color: transparent;
+}
+.trilha-no-botao:focus-visible { outline-offset: 6px; border-radius: 14px; }
+.trilha-no {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--trilha-fundo);
+  color: var(--tinta);
+  transition: transform var(--d-toque) var(--ease-padrao);
+}
+.trilha-no-botao:active .trilha-no { transform: scale(.94); }
+.trilha-no::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--suave);
+}
+.trilha-no-numero {
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+  padding-top: 1px;
+}
+.trilha-no svg { width: 18px; height: 18px; }
+
+/* feito: círculo cheio em --tinta, com a lótus pequena em --papel */
+.trilha-dia-feito .trilha-no { background: var(--tinta); color: var(--papel); }
+.trilha-dia-feito .trilha-no::before { border-color: var(--tinta); }
+/* disponível (e "espera por você"): anel --cobre de 2 px, com pulso lento de 4 s */
+.trilha-dia-hoje .trilha-no::before,
+.trilha-dia-espera .trilha-no::before {
+  border: 2px solid var(--cobre);
+  animation: trilha-pulso 2s var(--ease-respiro) infinite alternate;
+}
+@keyframes trilha-pulso { from { opacity: .35; } to { opacity: .8; } }
+.menos-movimento .trilha-dia-hoje .trilha-no::before,
+.menos-movimento .trilha-dia-espera .trilha-no::before { animation: none; opacity: 1; }
+/* abre amanhã: anel --suave; depois: anel --suave mais fino */
+.trilha-dia-amanha .trilha-no::before { border: 1.5px solid var(--suave); }
+.trilha-dia-depois .trilha-no::before { border: 1px solid var(--suave); }
+.trilha-dia-amanha .trilha-no,
+.trilha-dia-depois .trilha-no { color: var(--suave); }
+
+.trilha-no-texto { display: flex; flex-direction: column; min-width: 0; padding-top: 4px; }
+.trilha-no-titulo {
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 1.1875rem;
+  line-height: 1.5rem;
+  color: var(--tinta);
+  text-wrap: balance;
+}
+.trilha-no-dia { color: var(--suave); }
+.trilha-no-linha { margin-top: 3px; }
+.trilha-no-estado { margin-top: var(--e2); color: var(--suave); }
+.trilha-dia-hoje .trilha-no-estado,
+.trilha-dia-espera .trilha-no-estado { color: var(--cobre); }
+.trilha-dia-depois .trilha-no-titulo { color: var(--suave); }
+.trilha-dia-acao { margin: var(--e4) 0 0 calc(2rem + var(--e4)); }
+
+/* As folhas da trilha. */
+.folha-trilha .folha-cabeca { margin-bottom: var(--e2); }
+.trilha-folha-linha { margin-bottom: var(--e2); }
+.trilha-resumo-palavra {
+  margin-top: var(--e4) !important;
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 340;
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+  color: var(--tinta);
+  text-wrap: balance;
+}
+.trilha-resumo-mapa { display: flex; justify-content: center; padding: var(--e2) 0; color: var(--tinta); }
+.trilha-resumo-mapas { display: flex; justify-content: center; gap: var(--e5); padding: var(--e2) 0; }
+.trilha-resumo-cuidado {
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  text-wrap: balance;
+}
+.trilha-resumo-escrito {
+  padding: var(--e3) var(--e4);
+  background: var(--fundo);
+  border-radius: var(--raio-campo);
+  white-space: pre-wrap;
+}
+.trilha-resumo-acao { padding-top: var(--e2); }
+
+/* ================================================================== T14 · Abertura do dia da trilha */
+
+.dia-trilha .fase-frase { margin-top: var(--e5); }
+/* Em 320 px, as duas posições do seletor dividem a largura, para nada passar da borda. */
+@media (max-width: 359.98px) {
+  .dia-trilha .seletor { display: flex; width: 100%; }
+  .dia-trilha .seletor-opcao { flex: 1 1 0; min-width: 0; padding: 0 .5rem; font-size: .875rem; }
+}
+
+/* ================================================================== T15 · Olhar o caminho */
+
+.cam-tela { padding-top: var(--e4); }
+.cam { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+.cam-titulo:focus { outline: none; }
+.cam-texto { margin-top: var(--e3); max-width: 22rem; color: var(--suave); }
+.cam-lotus { position: relative; width: 100%; min-height: 13rem; margin-top: var(--e6); color: var(--tinta); }
+.cam-desenho { position: absolute; left: 0; top: 0; }
+.cam-alvos path {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 14px;
+  vector-effect: non-scaling-stroke;
+  pointer-events: all;
+  cursor: pointer;
+}
+.cam-destaque {
+  fill: none;
+  stroke: var(--tinta);
+  stroke-width: 2.6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--d-estado) linear;
+}
+.cam-destaque.visivel { opacity: 1; }
+.cam-destaque-centro { stroke: var(--cobre); }
+.cam-rotulos { position: absolute; inset: 0; pointer-events: none; }
+.cam-rotulo {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: .15em 0 0;
+  font-family: var(--f-rotulo);
+  font-weight: 600;
+  font-size: .6875rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--tinta);
+  pointer-events: auto;
+  border-radius: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+.cam-rotulo::before { content: ""; position: absolute; inset: -10px -6px; }
+.cam-rotulo-fim { align-items: flex-end; text-align: right; }
+.cam-rotulo-inicio { align-items: flex-start; text-align: left; }
+.cam-rotulo-centro { align-items: center; text-align: center; }
+.cam-rotulo-linha {
+  display: block;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .4em;
+  text-decoration-color: transparent;
+  transition: text-decoration-color var(--d-estado) linear;
+}
+.cam-rotulo-dia7 { color: var(--cobre); }
+.cam-rotulo[aria-pressed="true"] .cam-rotulo-linha { text-decoration-color: var(--cobre); }
+.cam-rotulo-vazio { width: 44px; height: 44px; border-radius: 50%; }
+.cam-rotulo-vazio::before { display: none; }
+.cam-entra { animation: aparecer 600ms var(--ease-padrao) var(--atraso, 0ms) backwards; }
+.menos-movimento .cam-entra { animation: aparecer 200ms linear backwards; }
+.cam-info { min-height: 1.4375rem; margin-top: var(--e4); max-width: 24rem; color: var(--tinta); text-wrap: balance; }
+.cam-info-texto { display: inline-block; animation: aparecer var(--d-estado) linear both; }
+.cam-assinatura { margin-top: var(--e5); }
+.cam-nome {
+  font-family: var(--f-display);
+  font-optical-sizing: auto;
+  font-style: italic;
+  font-weight: 340;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  color: var(--tinta);
+}
+.cam-datas { margin-top: 2px; }
+.cam-acoes { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: var(--e5); }
+.cam-acoes .botao-secundario { width: 100%; max-width: 22.5rem; }
+.cam-apoio { margin-top: var(--e2); max-width: 21rem; }
+.cam-acoes .botao-principal { margin-top: var(--e5); }
+
+/* Dentro do tocador (o Dia 7), T15 é o passo inteiro. */
+.tocador-ferramenta .cam { padding-top: var(--e2); }
+
+/* ================================================================== O mapa de cuidado (Dia 7, refazer e comparar) */
+
+.mapa { width: 100%; }
+.mapa-quadro { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.mapa-entra { animation: entrar 600ms var(--ease-padrao) both; }
+.menos-movimento .mapa-entra { animation: aparecer 200ms linear both; }
+.mapa .mapa-texto { margin-top: 0; margin-inline: auto; }
+.mapa .tocador-acao { margin-inline: auto; }
+.mapa-quadro > .tocador-acao-botoes { width: 100%; }
+.mapa-par {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--e5);
+  width: 100%;
+  max-width: 26rem;
+}
+.mapa-par-um { grid-template-columns: minmax(0, 1fr); max-width: 14rem; }
+.mapa-um { display: flex; flex-direction: column; align-items: center; color: var(--tinta); }
+.mapa-desenho { display: flex; justify-content: center; width: 100%; }
+.mapa-desenho svg { width: 100%; max-width: 168px; height: auto; }
+.mapa-rotulo { margin-top: var(--e3); color: var(--cobre); }

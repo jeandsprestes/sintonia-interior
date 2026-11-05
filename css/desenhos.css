@@ -1,0 +1,294 @@
+/*
+  css/desenhos.css · traços, cores e movimentos dos desenhos de js/desenhos.js e js/flor.js.
+
+  Cor só pelas variáveis de 4.1 (--tinta, --cobre, --cobre-claro, --linha, --kraft, --suave): o tema
+  Noite troca as variáveis e os desenhos acompanham. Movimento de 4.8. Com a classe menos-movimento no
+  <html> (quem aplica é a fundação), nada se desenha, nada balança e nada boia: o desenho aparece pronto,
+  e o que entra ou sai muda só a opacidade, em 200 ms.
+
+  Classes de traço: dz-tr (café, 1,6 px), dz-ic (ícone, currentColor, 1,5 px), dz-cobre, dz-agua
+  (--cobre-claro), dz-linha (--linha, 1 px), dz-fino (1,25 px), dz-desenha (o traço que se desenha).
+*/
+
+.dz-svg {
+  display: inline-block;
+  vertical-align: middle;
+  overflow: visible;
+  fill: none;
+  flex: none;
+}
+
+/* ---------------------------------------------------------------- traços */
+
+.dz-tr,
+.dz-ic,
+.dz-linha,
+.dz-mini-tr,
+.dz-mini-anel {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.dz-tr { stroke: var(--tinta); stroke-width: 1.6px; }
+.dz-ic { stroke: currentColor; stroke-width: 1.5px; }
+.dz-ic-tinta { stroke: var(--tinta); }
+.dz-fino { stroke-width: 1.25px; }
+.dz-lago-lotus { stroke-width: .9px; }
+.dz-ic-trilho { opacity: .3; }
+.dz-cobre { stroke: var(--cobre); }
+.dz-agua { stroke: var(--cobre-claro); }
+.dz-linha { stroke: var(--linha); stroke-width: 1px; }
+
+.dz-mini-tr { stroke: var(--tinta); stroke-width: 1px; }
+.dz-mini-tr.dz-agua { stroke: var(--cobre-claro); }
+.dz-mini-tr.dz-cobre { stroke: var(--cobre); }
+.dz-mini-anel { stroke: var(--linha); stroke-width: 1px; }
+.dz-mini-anel--atual { stroke: var(--cobre); stroke-width: 1.5px; }
+
+/* o disco do mapa de cuidado (o único preenchimento, 4.6) */
+.dz-disco { fill: var(--kraft); stroke: none; opacity: .5; }
+
+/* máscara da água (luminância: branco mostra, preto esconde): uma faixa que segue a primeira onda e a
+   esconde atrás do anel da semente e da folha da esquerda */
+.dz-m-sim { fill: white; stroke: none; }
+.dz-m-faixa { fill: none; stroke: black; stroke-linecap: butt; stroke-linejoin: round; }
+
+.dz-lago-mais {
+  fill: var(--suave);
+  stroke: none;
+  font-family: Mulish, "Segoe UI", system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.dz-circulo-duplo { display: block; opacity: .06; }
+
+/* ---------------------------------------------------------------- o traço que se desenha */
+
+.dz-svg .dz-desenha {
+  vector-effect: none;
+  stroke-dasharray: var(--d) var(--g);
+  stroke-dashoffset: 0;
+  animation: dz-desenhar var(--dur, 1600ms) var(--ease-traco, cubic-bezier(.65, 0, .35, 1)) var(--atraso, 0ms) both;
+}
+
+@keyframes dz-desenhar {
+  from { stroke-dashoffset: var(--o); }
+  to { stroke-dashoffset: 0; }
+}
+
+/* ---------------------------------------------------------------- grupos que se movem */
+
+.dz-balanco,
+.dz-onda,
+.dz-folha-abre,
+.dz-cresce,
+.dz-abre,
+.dz-reabre,
+.dz-botao-sai,
+.dz-botao-entra,
+.dz-petalas-fecham,
+.dz-semente-pousa,
+.dz-anel-surge,
+.dz-lua {
+  transform-box: view-box;
+}
+
+/* balanço: de -1,2° a 1,2° e de volta em 7 s (11 s no descanso), a partir da base da haste */
+.dz-flor .dz-balanco {
+  animation: dz-balanco 3.5s var(--ease-respiro, cubic-bezier(.37, 0, .63, 1)) infinite alternate;
+}
+.dz-flor--descansa .dz-balanco { animation-duration: 5.5s; }
+
+@keyframes dz-balanco {
+  from { transform: rotate(-1.2deg); }
+  to { transform: rotate(1.2deg); }
+}
+
+/* água: cada onda vai e volta em 14 s (22 s no descanso), com fases diferentes; 8 unidades no lago e 6 na flor */
+.dz-onda {
+  animation: dz-agua 7s var(--ease-respiro, cubic-bezier(.37, 0, .63, 1)) infinite alternate;
+}
+.dz-onda-2 { animation-delay: -2.4s; }
+.dz-onda-3 { animation-delay: -4.9s; }
+.dz-flor--descansa .dz-onda { animation-duration: 11s; }
+
+.dz-flor { --dz-desliza: 3px; }
+
+@keyframes dz-agua {
+  from { transform: translateX(calc(-1 * var(--dz-desliza, 4px))); }
+  to { transform: translateX(var(--dz-desliza, 4px)); }
+}
+
+/* folhas: abrem a partir da ponta perto da haste, em 600 ms */
+.dz-folha-abre {
+  animation: dz-folha-abre 600ms var(--ease-padrao, cubic-bezier(.2, .7, .2, 1)) var(--atraso, 0ms) both;
+}
+
+@keyframes dz-folha-abre {
+  from { transform: scale(.06, .45); opacity: 0; }
+  40% { opacity: 1; }
+  to { transform: none; opacity: 1; }
+}
+
+/* o botão do estágio 4 cresce a partir da base */
+.dz-cresce {
+  animation: dz-cresce 1600ms var(--ease-traco, cubic-bezier(.65, 0, .35, 1)) var(--atraso, 0ms) both;
+}
+
+@keyframes dz-cresce {
+  from { transform: scale(var(--de-x, .8), var(--de-y, .8)); }
+  to { transform: none; }
+}
+
+/* pétalas que já existiam se abrem mais (estágios 6 e 7) */
+.dz-abre {
+  animation: dz-abre 1200ms var(--ease-traco, cubic-bezier(.65, 0, .35, 1)) var(--atraso, 0ms) both;
+}
+
+@keyframes dz-abre {
+  from { transform: scaleX(var(--de-x, .7)); }
+  to { transform: none; }
+}
+
+/* acordar: o botão fechado se abre e as pétalas reabrem em 1.200 ms */
+.dz-reabre {
+  animation: dz-reabre 1200ms var(--ease-traco, cubic-bezier(.65, 0, .35, 1)) both;
+}
+
+@keyframes dz-reabre {
+  from { transform: scale(.16, .82); opacity: 0; }
+  35% { opacity: 1; }
+  to { transform: none; opacity: 1; }
+}
+
+.dz-botao-sai {
+  animation: dz-botao-sai 1200ms var(--ease-traco, cubic-bezier(.65, 0, .35, 1)) both;
+}
+
+@keyframes dz-botao-sai {
+  from { transform: none; opacity: 1; }
+  55% { opacity: 0; }
+  to { transform: scaleX(1.7); opacity: 0; }
+}
+
+/* descansar: as pétalas fecham sobre o botão em 1.200 ms */
+.dz-petalas-fecham {
+  animation: dz-petalas-fecham 1200ms var(--ease-traco, cubic-bezier(.65, 0, .35, 1)) both;
+}
+
+@keyframes dz-petalas-fecham {
+  from { transform: none; opacity: 1; }
+  20% { opacity: 1; }
+  72% { opacity: 0; }
+  to { transform: scale(.16, .82); opacity: 0; }
+}
+
+.dz-botao-entra {
+  animation: dz-botao-entra 1200ms var(--ease-traco, cubic-bezier(.65, 0, .35, 1)) both;
+}
+
+@keyframes dz-botao-entra {
+  from { transform: scaleX(1.7); opacity: 0; }
+  28% { opacity: 0; }
+  80% { opacity: 1; }
+  to { transform: none; opacity: 1; }
+}
+
+/* a lua: aparece em 800 ms; ao acordar, some em 600 ms */
+.dz-lua-entra {
+  animation: dz-lua-entra 800ms var(--ease-padrao, cubic-bezier(.2, .7, .2, 1)) both;
+}
+
+@keyframes dz-lua-entra {
+  from { transform: translateY(3px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+.dz-lua-sai {
+  animation: dz-lua-sai 600ms var(--ease-padrao, cubic-bezier(.2, .7, .2, 1)) both;
+}
+
+@keyframes dz-lua-sai {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* a semente pousando (primeira vez): desce 12 px até a água em 900 ms; o anel abre em volta dela */
+.dz-semente-pousa {
+  animation: dz-semente-pousa 900ms var(--ease-padrao, cubic-bezier(.2, .7, .2, 1)) var(--atraso, 0ms) both;
+}
+
+@keyframes dz-semente-pousa {
+  from { transform: translateY(var(--queda, -12px)); opacity: 0; }
+  35% { opacity: 1; }
+  to { transform: none; opacity: 1; }
+}
+
+.dz-anel-surge {
+  animation: dz-anel-surge 700ms var(--ease-padrao, cubic-bezier(.2, .7, .2, 1)) var(--atraso, 0ms) both;
+}
+
+@keyframes dz-anel-surge {
+  from { transform: scale(.35); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* a água se abre em volta da semente junto com o anel (antes do pouso, a primeira onda passa inteira) */
+.dz-m-surge {
+  animation: dz-surge 700ms var(--ease-padrao, cubic-bezier(.2, .7, .2, 1)) var(--atraso, 0ms) both;
+}
+
+/* o anel nasce em cobre e assenta na cor da água: junto da semente cobre, os dois viravam um desenho só */
+.dz-anel-assenta {
+  animation: dz-anel-assenta 1800ms var(--ease-padrao, cubic-bezier(.2, .7, .2, 1)) var(--atraso, 0ms) both;
+}
+
+@keyframes dz-anel-assenta {
+  from { stroke: var(--cobre); }
+  45% { stroke: var(--cobre); }
+  to { stroke: var(--cobre-claro); }
+}
+
+/* ---------------------------------------------------------------- menos movimento */
+
+html.menos-movimento .dz-balanco,
+html.menos-movimento .dz-onda,
+html.menos-movimento .dz-anel-assenta {
+  animation: none;
+}
+
+html.menos-movimento .dz-svg .dz-desenha {
+  stroke-dasharray: none;
+  animation: dz-surge 200ms ease both;
+}
+
+html.menos-movimento .dz-folha-abre,
+html.menos-movimento .dz-cresce,
+html.menos-movimento .dz-abre,
+html.menos-movimento .dz-reabre,
+html.menos-movimento .dz-botao-entra,
+html.menos-movimento .dz-lua-entra,
+html.menos-movimento .dz-semente-pousa,
+html.menos-movimento .dz-anel-surge,
+html.menos-movimento .dz-m-surge {
+  animation: dz-surge 200ms ease both;
+}
+
+html.menos-movimento .dz-botao-sai,
+html.menos-movimento .dz-petalas-fecham,
+html.menos-movimento .dz-lua-sai {
+  animation: dz-some 200ms ease both;
+}
+
+@keyframes dz-surge {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dz-some {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}

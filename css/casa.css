@@ -1,0 +1,634 @@
+/* Estilos das telas da biblioteca e da casa: Práticas, Semana, Caderno, Ajustes e as de dentro deles (T16 a T18, T22 a T27).
+   Prefixos: casa- (o que as telas dividem, js/casa.js), praticas-, semana-, lago-, caderno-, ajustes-, dados-,
+   sobre-, aviso-, instalar-, demo-. Cores só pelos tokens de 4.1. */
+
+/* ------------------------------------------------------------------ o que as telas dividem */
+
+/* No celular, numa tela cujo título grande já diz o nome (Práticas), o nome da barra só aparece ao rolar. */
+html.casa-titulo-na-tela .barra-aba .titulo-barra { transition: opacity var(--d-estado) var(--ease-padrao); }
+html.casa-titulo-na-tela .barra-aba:not(.rolou) .titulo-barra { opacity: 0; }
+
+/* A linha que leva a outra tela (nome, prévia e o "›"). */
+.casa-linhas {
+  border-top: 1px solid var(--linha);
+}
+.casa-linhas > li { border-bottom: 1px solid var(--linha); }
+.casa-linha {
+  display: flex;
+  align-items: center;
+  gap: var(--e4);
+  width: 100%;
+  min-height: 3.75rem;
+  padding: var(--e3) 0;
+  color: var(--tinta);
+  text-align: left;
+  transition: color var(--d-toque), background-color var(--d-toque) var(--ease-padrao);
+}
+.casa-linha-texto { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; min-width: 0; }
+.casa-linha-nome { font: 400 1.0625rem/1.5rem var(--f-texto); }
+.casa-linha-previa {
+  font-size: .9375rem;
+  line-height: 1.375rem;
+  color: var(--suave);
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+.casa-linha-seta { display: inline-flex; flex: none; color: var(--suave); transform: scaleX(-1); }
+.casa-linha-seta svg { width: 18px; height: 18px; }
+.casa-linha:active { color: var(--cobre-forte); }
+.casa-linha:active .casa-linha-seta { color: var(--cobre); }
+.casa-linha:focus-visible { outline-offset: 2px; border-radius: 8px; }
+@media (hover: hover) {
+  .casa-linha:hover .casa-linha-nome { color: var(--cobre-forte); }
+  .casa-linha:hover .casa-linha-seta { color: var(--cobre); }
+}
+
+.casa-seta { display: inline-block; width: 18px; height: 10px; vertical-align: middle; color: currentColor; }
+
+/* ------------------------------------------------------------------ T16 · Práticas */
+
+.praticas { padding-top: var(--e2); }
+.praticas-linha { margin-top: var(--e2); color: var(--suave); }
+.praticas-seletor { display: flex; width: 100%; max-width: 24rem; margin-top: var(--e5); }
+.praticas-seletor .seletor-opcao { flex: 1 1 0; padding: 0 var(--e3); }
+.praticas-seletor .seletor-opcao[aria-selected="true"] {
+  background: var(--papel);
+  border-color: var(--cobre);
+  box-shadow: inset 0 0 0 .5px var(--cobre);
+  color: var(--tinta);
+  font-weight: 600;
+}
+.praticas-painel.trocando { animation: aparecer var(--d-estado) var(--ease-padrao) backwards; }
+
+.praticas-grupo { margin-top: var(--e7); }
+.praticas-painel > .praticas-grupo:first-child { margin-top: var(--e6); }
+.praticas-grupo-rotulo { margin-bottom: 0; }
+.praticas-grupo-titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  font: 400 1.375rem/1.6875rem var(--f-display);
+  font-optical-sizing: auto;
+  letter-spacing: -.005em;
+  color: var(--tinta);
+}
+.praticas-grupo-icone { display: inline-flex; color: var(--tinta); }
+.praticas-grupo-icone svg { width: 24px; height: 24px; }
+
+.praticas-lista { display: flex; flex-direction: column; gap: var(--e3); margin-top: var(--e4); }
+.praticas-cartao {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  column-gap: var(--e4);
+  align-items: start;
+  padding: 1.125rem 1.25rem 1.1875rem 1.125rem;
+  color: var(--tinta);
+  transition: background-color var(--d-toque) var(--ease-padrao), border-color var(--d-estado);
+}
+.praticas-cartao:active { background: var(--painel); }
+.praticas-cartao:focus-visible { outline-offset: 3px; border-radius: var(--raio-cartao); }
+@media (hover: hover) { .praticas-cartao:hover { border-color: var(--linha-forte); } }
+.praticas-cartao-icone { display: inline-flex; padding-top: 1px; color: var(--tinta); }
+.praticas-cartao-icone svg { width: 26px; height: 26px; }
+.praticas-cartao-corpo { display: flex; flex-direction: column; min-width: 0; }
+.praticas-cartao-titulo {
+  font: 400 1.25rem/1.625rem var(--f-display);
+  font-optical-sizing: auto;
+  letter-spacing: -.005em;
+  text-wrap: balance;
+}
+.praticas-cartao-tempo {
+  margin-top: 2px;
+  font: 600 .8125rem/1.25rem var(--f-texto);
+  letter-spacing: .01em;
+  color: var(--cobre);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.praticas-cartao-oque {
+  margin-top: var(--e2);
+  font-size: .9375rem;
+  line-height: 1.4375rem;
+  color: var(--suave);
+  text-wrap: pretty;
+}
+.praticas-ferramentas .praticas-cartao-oque { margin-top: var(--e1); }
+
+/* Respirar comigo, a ferramenta (tela de foco). */
+.praticas-resp {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: calc(100dvh - var(--altura-barra) - env(safe-area-inset-top) - var(--topo-extra) - env(safe-area-inset-bottom) - var(--e7));
+  padding-bottom: var(--e5);
+}
+.praticas-resp-centro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  transition: opacity var(--d-estado) linear;
+}
+.praticas-resp.pausado .praticas-resp-centro { opacity: 0; }
+.praticas-resp-apoio { margin-top: var(--e5); min-height: 1.4375rem; }
+.praticas-resp-escolhas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e1);
+  width: 100%;
+  margin-top: var(--e4);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 900ms var(--ease-padrao), visibility 0s linear 900ms;
+}
+.praticas-resp-escolhas.visivel { visibility: visible; opacity: 1; transition: opacity 900ms var(--ease-padrao), visibility 0s; }
+.praticas-resp-escolhas .botao-principal { max-width: 18rem; }
+.praticas-resp-veu .link { margin-top: var(--e1); }
+.menos-movimento .praticas-resp-escolhas { transition: opacity 200ms linear, visibility 0s linear 200ms; }
+.menos-movimento .praticas-resp-escolhas.visivel { transition: opacity 200ms linear, visibility 0s; }
+
+@media (min-width: 960px) {
+  .praticas-seletor { max-width: 22rem; }
+  .praticas-resp { min-height: calc(100vh - var(--altura-barra) - var(--topo-extra) - 16px - 3rem); }
+}
+
+/* ------------------------------------------------------------------ T17 · Semana */
+
+.semana { padding-top: var(--e2); }
+.semana-cabeca-linha { display: flex; align-items: center; justify-content: space-between; gap: var(--e3); min-height: 44px; }
+.semana-rotulo { flex: 1 1 auto; min-width: 0; }
+.semana-rotulo-parte { white-space: nowrap; }
+.semana-rotulo-datas { display: inline-block; text-wrap: balance; }
+.semana-setas { display: flex; flex: none; gap: 2px; margin-right: -10px; }
+.semana-seta { color: var(--tinta); }
+.semana-seta svg { width: 22px; height: 22px; }
+.semana-seta-proxima svg { transform: scaleX(-1); }
+.semana-seta:disabled { color: var(--linha-forte); }
+.semana-seta:disabled:active { background: transparent; }
+.semana-titulo { margin-top: var(--e1); }
+
+/* A faixa dos sete dias: lótus pequena no dia com cuidado, ponto fino nos outros, anel cobre em hoje. */
+.semana-faixa {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin-top: var(--e5);
+  padding: var(--e4) var(--e1) var(--e3);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio-cartao);
+}
+.semana-dia { display: flex; flex-direction: column; align-items: center; gap: var(--e2); min-width: 0; }
+.semana-dia-letra {
+  font: 600 .75rem/1rem var(--f-rotulo);
+  letter-spacing: .14em;
+  margin-right: -.14em;
+  padding-top: .15em;
+  color: var(--suave);
+}
+.semana-dia-hoje .semana-dia-letra { color: var(--cobre); }
+.semana-dia-marca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  color: var(--tinta);
+}
+.semana-dia-marca svg { width: 22px; height: 22px; }
+.semana-dia-hoje .semana-dia-marca { box-shadow: inset 0 0 0 1.5px var(--cobre); }
+.semana-dia-ponto { width: 4px; height: 4px; border-radius: 50%; background: var(--linha-forte); opacity: .7; }
+
+.semana-resumo { margin-top: var(--e6); }
+.semana-frase { max-width: 24ch; }
+.semana-respirar { margin-top: var(--e5); }
+.semana-bloco { margin-top: var(--e6); }
+.semana-bloco > .rotulo { margin-bottom: var(--e3); }
+.semana-feitos { display: flex; flex-direction: column; gap: var(--e2); }
+.semana-feito {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  column-gap: var(--e3);
+  align-items: start;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.semana-feito-lotus { display: inline-flex; padding-top: 3px; color: var(--tinta); }
+.semana-feito-lotus svg { width: 18px; height: 18px; }
+.semana-sinais { display: flex; flex-wrap: wrap; gap: var(--e3) var(--e2); }
+.semana-sinal { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 3.75rem; }
+.semana-sinal-desenho {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--linha);
+  background: var(--papel);
+  color: var(--tinta);
+}
+.semana-sinal-desenho svg { width: 20px; height: 20px; }
+.semana-sinal-nome { font-size: .8125rem; line-height: 1.125rem; color: var(--suave); text-align: center; }
+.semana-linhas { display: flex; flex-direction: column; gap: var(--e4); }
+.semana-linha { padding-left: var(--e4); border-left: 2px solid var(--linha); }
+.semana-linha-texto {
+  font: italic 300 1.25rem/1.75rem var(--f-display);
+  font-optical-sizing: auto;
+  color: var(--tinta);
+  overflow-wrap: anywhere;
+}
+.semana-linha-dia { margin-top: 2px; font-size: .875rem; line-height: 1.25rem; color: var(--suave); }
+.semana-extras { display: flex; flex-direction: column; gap: var(--e2); margin-top: var(--e6); }
+.semana-desde { margin-top: var(--e6); padding-top: var(--e4); border-top: 1px solid var(--linha); }
+
+.semana-flor-linha { display: flex; align-items: center; gap: var(--e5); }
+.semana-flor-botao { flex: none; border-radius: 50%; color: var(--tinta); transition: transform var(--d-toque) var(--ease-padrao); }
+.semana-flor-botao:active { transform: scale(.985); }
+.semana-flor-botao:focus-visible { outline-offset: 4px; border-radius: 50%; }
+.semana-flor-texto { display: flex; flex-direction: column; gap: var(--e1); min-width: 0; }
+.semana-flor-estagio { color: var(--cobre); }
+
+.semana-lago-botao {
+  display: block;
+  width: 100%;
+  padding: var(--e2) 0;
+  border-radius: var(--raio-campo);
+  color: var(--tinta);
+  transition: background-color var(--d-toque) var(--ease-padrao);
+}
+.semana-lago-botao:active { background: var(--painel); }
+.semana-lago-botao:focus-visible { outline-offset: 2px; border-radius: var(--raio-campo); }
+.semana-lago-desenho { display: block; }
+.semana-lago-desenho svg { display: block; width: 100%; height: auto; }
+.semana-lago-texto { margin-top: var(--e1); }
+.semana-mais { margin-top: var(--e7); }
+
+/* A folha Seu lago (6.10). */
+.lago-folha-desenho { margin-top: var(--e1); margin-bottom: var(--e4); color: var(--tinta); }
+.lago-folha-desenho svg { display: block; width: 100%; height: auto; }
+.lago-folha-lista { display: flex; flex-direction: column; gap: var(--e3); margin-top: var(--e4) !important; }
+.lago-folha-item { display: grid; grid-template-columns: 20px minmax(0, 1fr); column-gap: var(--e3); align-items: start; font-size: 1rem; line-height: 1.5rem; }
+.lago-folha-lotus { display: inline-flex; padding-top: 2px; color: var(--tinta); }
+.lago-folha-lotus svg { width: 20px; height: 20px; }
+
+@media (min-width: 960px) {
+  .semana { padding-top: 0; }
+  .semana-mais { margin-top: var(--e7); }
+}
+
+/* ------------------------------------------------------------------ T18 · Seu caderno */
+
+.caderno-tela { padding-top: var(--e5); }
+.caderno-linha { margin-top: var(--e2); color: var(--suave); }
+.caderno-indice { margin-top: var(--e6); }
+.caderno-vazio { margin-top: var(--e5); }
+.caderno-vazio .texto { color: var(--suave); }
+.caderno-vazio-link { margin-top: var(--e2); }
+.caderno-acoes { display: flex; flex-wrap: wrap; gap: var(--e3); margin-top: var(--e5); }
+.caderno-secao { margin-top: var(--e7); }
+.caderno-secao > .rotulo { margin-bottom: var(--e3); }
+.caderno-cartoes { display: flex; flex-direction: column; gap: var(--e3); }
+
+/* Registros */
+.caderno-grupo { margin-top: var(--e6); }
+.caderno-grupo-rotulo { margin-bottom: var(--e3); }
+.caderno-registro {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  padding: 1rem 1rem 1rem 1.25rem;
+  color: var(--tinta);
+  transition: background-color var(--d-toque) var(--ease-padrao), border-color var(--d-estado);
+}
+.caderno-registro:active { background: var(--painel); }
+.caderno-registro:focus-visible { outline-offset: 3px; border-radius: var(--raio-cartao); }
+@media (hover: hover) { .caderno-registro:hover { border-color: var(--linha-forte); } }
+.caderno-registro-corpo { display: flex; flex-direction: column; gap: 3px; flex: 1 1 auto; min-width: 0; }
+.caderno-registro-titulo { font: 600 1.0625rem/1.4375rem var(--f-texto); }
+.caderno-registro-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--e4);
+  row-gap: 2px;
+  font-size: .9375rem;
+  line-height: 1.375rem;
+  color: var(--suave);
+}
+.caderno-registro-linha {
+  margin-top: var(--e1);
+  font: italic 300 1.1875rem/1.625rem var(--f-display);
+  font-optical-sizing: auto;
+  color: var(--tinta);
+  overflow-wrap: anywhere;
+}
+.caderno-sinal { display: inline-flex; align-items: center; gap: 6px; color: var(--suave); }
+.caderno-sinal-icone { display: inline-flex; color: var(--tinta); }
+.caderno-sinal-icone svg { width: 16px; height: 16px; }
+
+.caderno-detalhe-dia { margin-bottom: var(--e2); }
+.caderno-detalhe-versao { margin-top: var(--e1); }
+.caderno-detalhe-registro { display: flex; flex-direction: column; gap: var(--e2); margin-top: var(--e5); }
+.caderno-detalhe-registro .caderno-sinal { font-size: 1rem; color: var(--tinta); font-weight: 600; }
+.caderno-detalhe-registro .caderno-sinal-icone svg { width: 20px; height: 20px; }
+.caderno-detalhe-linha {
+  font: italic 300 1.375rem/1.875rem var(--f-display);
+  font-optical-sizing: auto;
+  color: var(--tinta);
+  overflow-wrap: anywhere;
+}
+.caderno-respostas { margin: 0; }
+.caderno-pergunta { font-size: .9375rem; line-height: 1.375rem; color: var(--suave); }
+.caderno-pergunta:not(:first-child) { margin-top: var(--e4); }
+.caderno-resposta { margin: 2px 0 0; font-size: 1.0625rem; line-height: 1.625rem; color: var(--tinta); white-space: pre-wrap; overflow-wrap: anywhere; }
+.caderno-acao-final { margin-top: var(--e6); }
+
+/* Medições */
+.caderno-resumo { margin-top: var(--e5); max-width: 24ch; }
+.caderno-medicoes { margin-top: var(--e5); border-top: 1px solid var(--linha); }
+.caderno-medicao { padding: var(--e4) 0; border-bottom: 1px solid var(--linha); }
+.caderno-medicao-linha { display: flex; align-items: baseline; justify-content: space-between; gap: var(--e4); }
+.caderno-medicao-nome { min-width: 0; font-size: 1rem; line-height: 1.5rem; }
+.caderno-medicao-par {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  font: 400 1.25rem/1.5rem var(--f-display);
+  font-optical-sizing: auto;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--tinta);
+}
+.caderno-medicao-par .casa-seta { width: 16px; color: var(--suave); }
+.caderno-regua.regua-par { max-width: none; height: 20px; margin: var(--e2) 0 0; }
+.caderno-regua .regua-par-linha { top: 9px; background: var(--linha-forte); }
+.caderno-regua .regua-par-liga { top: 9px; }
+.caderno-regua .regua-par-antes, .caderno-regua .regua-par-depois { top: 4px; }
+.caderno-regua .regua-par-antes { background: var(--fundo); }
+.caderno-regua-marca { position: absolute; top: 6px; width: 1px; height: 7px; margin-left: -.5px; background: var(--linha-forte); }
+
+/* Descargas */
+.caderno-descargas { margin-top: var(--e5); }
+.caderno-descarga { display: flex; flex-direction: column; gap: var(--e4); padding: 1.25rem 1.25rem 1rem; }
+.caderno-descarga-dia { margin-bottom: calc(var(--e1) * -1); }
+.caderno-descarga-grupo-nome { font: 600 1rem/1.5rem var(--f-texto); color: var(--tinta); margin-bottom: var(--e1); }
+.caderno-itens { display: flex; flex-direction: column; gap: 2px; }
+.caderno-item { font-size: 1rem; line-height: 1.5rem; color: var(--tinta); padding: 2px 0; overflow-wrap: anywhere; }
+.caderno-itens:not(.caderno-itens-fazer) .caderno-item { position: relative; padding-left: var(--e4); }
+.caderno-itens:not(.caderno-itens-fazer) .caderno-item::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: .72em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--linha-forte);
+}
+.caderno-item-fazer { padding: 0; }
+.caderno-marcar { align-items: flex-start; padding: .625rem 0; min-height: 2.75rem; }
+.caderno-marcar input { margin-top: 2px; }
+.caderno-item-texto { transition: color var(--d-estado); }
+.caderno-item-fazer.feito .caderno-item-texto { color: var(--suave); text-decoration: line-through; text-decoration-color: var(--linha-forte); text-decoration-thickness: 1px; }
+.caderno-proximo { display: flex; align-items: center; gap: 6px; margin: -.25rem 0 0 calc(20px + var(--e3)); font-size: .875rem; line-height: 1.25rem; font-weight: 600; color: var(--cobre); }
+.caderno-proximo-lotus { display: inline-flex; color: var(--tinta); }
+.caderno-proximo-lotus svg { width: 16px; height: 16px; }
+.caderno-gesto { margin: 2px 0 var(--e1) calc(20px + var(--e3)); font-size: .9375rem; line-height: 1.375rem; color: var(--suave); }
+.caderno-soltos { margin-top: calc(var(--e2) * -1); }
+.caderno-descarga-pe { display: flex; justify-content: flex-end; border-top: 1px solid var(--linha); padding-top: var(--e1); }
+
+/* Áudios e escritos */
+.caderno-audios, .caderno-escritos { margin-top: var(--e5); }
+.caderno-audio { display: flex; flex-direction: column; gap: 2px; padding: 1.125rem 1.25rem 1rem; }
+.caderno-audio-quando { font: 600 1.0625rem/1.4375rem var(--f-texto); }
+.caderno-audio-quando .apoio { font-weight: 400; }
+.caderno-audio-duracao { font-variant-numeric: tabular-nums; }
+.caderno-audio-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2) var(--e3); margin-top: var(--e3); }
+.caderno-audio-acoes .botao-secundario { min-height: 2.75rem; padding: .5rem 1.125rem; }
+.caderno-audio-acoes .link { margin-left: auto; }
+.caderno-escrito { display: flex; flex-direction: column; gap: var(--e3); padding: 1.25rem 1.25rem 1rem; }
+.caderno-escrito-texto { font-size: 1.0625rem; line-height: 1.6875rem; color: var(--tinta); white-space: pre-wrap; overflow-wrap: anywhere; }
+.caderno-escrito-pe { display: flex; justify-content: flex-end; border-top: 1px solid var(--linha); padding-top: var(--e1); }
+
+/* O que te faz bem */
+.caderno-etiquetas { display: flex; flex-wrap: wrap; gap: var(--e2); margin-top: var(--e5); }
+.caderno-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: .375rem .9375rem;
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  background: var(--papel);
+  font-size: .9375rem;
+  line-height: 1.25rem;
+  color: var(--tinta);
+}
+.caderno-campos { display: flex; flex-direction: column; gap: var(--e4); margin: var(--e5) 0 0; }
+.caderno-campo-nome { font-size: .9375rem; line-height: 1.375rem; color: var(--suave); }
+.caderno-campo-valor { margin: 2px 0 0; font-size: 1.0625rem; line-height: 1.625rem; color: var(--tinta); overflow-wrap: anywhere; }
+.caderno-campo-valor.caderno-frase,
+.caderno-frase-guardada {
+  font: italic 300 1.3125rem/1.8125rem var(--f-display);
+  font-optical-sizing: auto;
+}
+.caderno-frases { display: flex; flex-direction: column; gap: var(--e3); }
+.caderno-frase-guardada { padding-left: var(--e4); border-left: 2px solid var(--linha); color: var(--tinta); }
+
+/* Seu cuidado possível */
+.caderno-cuidado { margin-top: var(--e5); padding: 1.375rem 1.25rem 1.25rem; }
+.caderno-cuidado-frase {
+  font: italic 400 1.5rem/2rem var(--f-display);
+  font-optical-sizing: auto;
+  text-wrap: balance;
+  color: var(--tinta);
+}
+.caderno-cuidado-minima { margin-top: var(--e3); }
+
+/* Sua trilha */
+.caderno-dias { margin-top: var(--e5); }
+.caderno-dia { display: flex; flex-direction: column; gap: var(--e2); padding: 1.25rem 1.25rem 1.25rem; }
+.caderno-dia-rotulo { margin-bottom: 0; }
+.caderno-dia-quando { margin-top: calc(var(--e1) * -1); }
+.caderno-dia-quando + * { margin-top: var(--e2); }
+.caderno-dia-medicao { font-family: var(--f-display); font-size: 1.1875rem; line-height: 1.625rem; }
+.caderno-dia-mapa { display: flex; justify-content: center; padding: var(--e2) 0; color: var(--tinta); }
+.caderno-dia-cuidado { font: italic 400 1.1875rem/1.625rem var(--f-display); font-optical-sizing: auto; }
+.caderno-rodadas-lista { border-top: 1px solid var(--linha); }
+.caderno-rodada-item { border-bottom: 1px solid var(--linha); }
+.caderno-rodada {
+  display: flex;
+  align-items: center;
+  gap: var(--e4);
+  width: 100%;
+  min-height: 3.75rem;
+  padding: var(--e3) 0;
+  color: var(--tinta);
+  text-align: left;
+}
+.caderno-rodada:focus-visible { outline-offset: 2px; border-radius: 8px; }
+.caderno-rodada-seta { display: inline-flex; color: var(--suave); transform: rotate(-90deg); transition: transform var(--d-abrir) var(--ease-padrao); }
+.caderno-rodada-seta svg { width: 18px; height: 18px; }
+.caderno-rodada[aria-expanded="true"] .caderno-rodada-seta { transform: rotate(90deg); }
+.caderno-rodada-painel > div > .caderno-dias { margin-top: 0; padding-bottom: var(--e4); }
+.menos-movimento .caderno-rodada-seta { transition: none; }
+
+/* ------------------------------------------------------------------ T22 · Ajustes */
+
+.ajustes-tela { padding-top: var(--e5); }
+.ajustes-grupo { margin-top: var(--e6); }
+.ajustes-grupo-rotulo { margin-bottom: var(--e2); }
+.ajustes-itens { border-top: 1px solid var(--linha); }
+.ajustes-item { padding: var(--e3) 0; border-bottom: 1px solid var(--linha); }
+.ajustes-item .linha-chave { padding: 0; min-height: 2.75rem; }
+.ajustes-item .linha-chave-texto { gap: 3px; }
+.ajustes-item-seletor { display: flex; flex-direction: column; gap: var(--e3); padding: var(--e4) 0; container-type: inline-size; }
+.ajustes-nome { font: 400 1.0625rem/1.5rem var(--f-texto); color: var(--tinta); }
+.ajustes-seletor { display: flex; width: 100%; }
+.ajustes-seletor .seletor-opcao { padding: 0 .875rem; }
+.ajustes-seletor:not(.ajustes-tema) .seletor-opcao { flex: 1 1 0; }
+.ajustes-apoio { margin-top: calc(var(--e1) * -1); }
+.ajustes-ouvir { margin-top: var(--e1); }
+.ajustes-ouvir .link { min-height: 2.25rem; }
+.ajustes-mais .casa-linhas { margin-top: 0; }
+.ajustes-versao {
+  margin-top: var(--e7);
+  padding: var(--e3) 0;
+  text-align: center;
+  font-size: .8125rem;
+  line-height: 1.25rem;
+  color: var(--mudo);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+
+/* O seletor de três posições vira uma lista de três linhas com marcação (4.4): abaixo de 360 px de tela e,
+   com a letra maior, quando a pílula deixa de caber na coluna (19,4375 rem). As duas regras são iguais:
+   uma pela largura da tela, a outra pela largura da coluna. */
+@media (max-width: 359.98px) {
+  .ajustes-tema.seletor { flex-direction: column; gap: 0; padding: 0; border: 0; border-radius: 0; border-top: 1px solid var(--linha); }
+  .ajustes-tema .seletor-opcao { display: flex; align-items: center; justify-content: space-between; min-height: 3rem; padding: 0 .25rem 0 0; border: 0; border-bottom: 1px solid var(--linha); border-radius: 0; color: var(--tinta); font-weight: 400; text-align: left; white-space: normal; }
+  .ajustes-tema .seletor-opcao::after { content: ""; flex: none; width: 1.125rem; height: 1.125rem; margin-left: var(--e3); border-radius: 50%; border: 1px solid var(--suave); box-sizing: border-box; transition: box-shadow var(--d-estado), border-color var(--d-estado); }
+  .ajustes-tema .seletor-opcao[aria-checked="true"] { background: transparent; box-shadow: none; border-color: var(--linha); font-weight: 600; }
+  .ajustes-tema .seletor-opcao[aria-checked="true"]::after { border: 1.5px solid var(--cobre); box-shadow: inset 0 0 0 3.5px var(--fundo), inset 0 0 0 9px var(--cobre); }
+  .ajustes-tema .seletor-opcao:focus-visible { outline-offset: -2px; border-radius: 8px; }
+  .ajustes-tema .seletor-opcao:last-child { border-bottom: 0; }
+}
+@container (max-width: 19.4375rem) {
+  .ajustes-tema.seletor { flex-direction: column; gap: 0; padding: 0; border: 0; border-radius: 0; border-top: 1px solid var(--linha); }
+  .ajustes-tema .seletor-opcao { display: flex; align-items: center; justify-content: space-between; min-height: 3rem; padding: 0 .25rem 0 0; border: 0; border-bottom: 1px solid var(--linha); border-radius: 0; color: var(--tinta); font-weight: 400; text-align: left; white-space: normal; }
+  .ajustes-tema .seletor-opcao::after { content: ""; flex: none; width: 1.125rem; height: 1.125rem; margin-left: var(--e3); border-radius: 50%; border: 1px solid var(--suave); box-sizing: border-box; transition: box-shadow var(--d-estado), border-color var(--d-estado); }
+  .ajustes-tema .seletor-opcao[aria-checked="true"] { background: transparent; box-shadow: none; border-color: var(--linha); font-weight: 600; }
+  .ajustes-tema .seletor-opcao[aria-checked="true"]::after { border: 1.5px solid var(--cobre); box-shadow: inset 0 0 0 3.5px var(--fundo), inset 0 0 0 9px var(--cobre); }
+  .ajustes-tema .seletor-opcao:focus-visible { outline-offset: -2px; border-radius: 8px; }
+  .ajustes-tema .seletor-opcao:last-child { border-bottom: 0; }
+}
+
+/* ------------------------------------------------------------------ T23 · Seus dados */
+
+.dados-tela { padding-top: var(--e5); }
+.dados-texto { margin-top: var(--e3); }
+.dados-espaco { margin-top: var(--e3); }
+.dados-blocos { display: flex; flex-direction: column; gap: var(--e6); margin-top: var(--e6); }
+.dados-bloco { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e1); }
+.dados-bloco .botao-secundario { min-width: 13.75rem; margin-bottom: var(--e2); }
+.dados-ultima { color: var(--suave); }
+.dados-demo {
+  padding: var(--e4) 1.125rem;
+  background: var(--painel);
+  border-radius: var(--raio-campo);
+  font-size: .9375rem;
+  line-height: 1.4375rem;
+  color: var(--tinta);
+}
+.dados-iphone { padding-top: var(--e4); border-top: 1px solid var(--linha); }
+.dados-apagar { margin-top: var(--e8); padding-top: var(--e3); border-top: 1px solid var(--linha); }
+.dados-apagar-botao {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font: 600 1rem/1.5rem var(--f-texto);
+  color: var(--tinta);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .2em;
+  transition: color var(--d-toque);
+}
+.dados-apagar-botao:active { color: var(--suave); }
+
+/* ------------------------------------------------------------------ T24 · Sobre */
+
+.sobre-tela { padding-top: var(--e4); }
+.sobre-marca { display: flex; justify-content: center; }
+/* O fundo do logo plano (rgb 240, 234, 220) vira branco com o brilho e some no multiplicar, sobre o creme
+   ou sobre o papel do caderno. O isolamento dá ao multiplicar um fundo certo dentro da tela. */
+.sobre-logo-claro { isolation: isolate; background: var(--fundo); }
+.sobre-logo { display: block; width: 12.5rem; height: auto; mix-blend-mode: multiply; filter: brightness(1.18); }
+.sobre-logo-noite { display: none; padding: var(--e4) 0 var(--e2); color: var(--tinta); }
+.sobre-logo-noite svg { width: 160px; height: auto; }
+:root[data-tema="noite"] .sobre-logo-claro { display: none; }
+:root[data-tema="noite"] .sobre-logo-noite { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root[data-tema="auto"] .sobre-logo-claro { display: none; }
+  :root[data-tema="auto"] .sobre-logo-noite { display: block; }
+}
+.sobre-nome { margin-top: var(--e3); text-align: center; color: var(--berinjela); }
+.sobre-linha { margin-top: var(--e2); text-align: center; font-size: 1.0625rem; line-height: 1.6875rem; color: var(--suave); }
+.sobre-textos { display: flex; flex-direction: column; gap: var(--e4); margin-top: var(--e6); }
+.sobre-aviso { display: flex; flex-direction: column; gap: var(--e3); margin-top: var(--e7); }
+.sobre-aviso .rotulo { margin-bottom: var(--e1); }
+.sobre-cvv { margin-top: var(--e6); }
+.sobre-pe { margin-top: var(--e7); padding-top: var(--e4); border-top: 1px solid var(--linha); }
+.sobre-pe-licencas { margin-top: var(--e1); }
+.sobre-licencas-lista { display: flex; flex-wrap: wrap; column-gap: var(--e5); }
+.sobre-versao { margin-top: var(--e3); }
+
+/* ------------------------------------------------------------------ T25 · Aviso importante */
+
+.aviso-tela { padding-top: var(--e5); }
+.aviso-bloco { margin-top: var(--e5); }
+.aviso-bloco-ajuda {
+  padding: 1.25rem;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-top: 2px solid var(--cobre);
+  border-radius: 0 0 var(--raio-cartao) var(--raio-cartao);
+}
+.aviso-acoes { display: flex; flex-direction: column; gap: var(--e3); margin-top: var(--e4); }
+.aviso-acoes .botao-principal, .aviso-acoes .botao-secundario { display: flex; width: 100%; max-width: none; }
+.aviso-acoes .link { align-self: flex-start; }
+
+/* ------------------------------------------------------------------ T26 · Instalar */
+
+.instalar-tela { padding-top: var(--e5); }
+.instalar-texto { margin-top: var(--e3); }
+.instalar-instalado { margin-top: var(--e6); }
+.instalar-secoes { margin-top: var(--e6); }
+.instalar-secao { padding: var(--e5) 0; border-top: 1px solid var(--linha); }
+.instalar-secao:last-child { border-bottom: 1px solid var(--linha); }
+.instalar-secao .rotulo { margin-bottom: var(--e2); }
+.instalar-acao { margin-top: var(--e4); }
+
+/* ------------------------------------------------------------------ T27 · Para testar o protótipo */
+
+.demo-tela { padding-top: var(--e5); }
+.demo-texto { margin-top: var(--e3); }
+.demo-chave { margin-top: var(--e5); padding: var(--e2) 0; border-block: 1px solid var(--linha); }
+.demo-controles { margin-top: var(--e5); }
+.demo-relogio { font: italic 400 1.1875rem/1.625rem var(--f-display); font-optical-sizing: auto; color: var(--cobre); }
+.demo-botoes { display: flex; flex-direction: column; gap: var(--e3); margin-top: var(--e4); }
+.demo-botoes .botao-secundario { width: 100%; }
+
+/* Na página do caderno (computador), o fundo já é papel: os anéis e as etiquetas acompanham. */
+@media (min-width: 960px) {
+  .pagina-direita .caderno-regua .regua-par-antes { background: var(--papel); }
+  .pagina-direita .caderno-etiqueta { background: var(--fundo); }
+  .pagina-direita .sobre-logo-claro { background: var(--papel); }
+  .caderno-tela, .ajustes-tela, .dados-tela, .sobre-tela, .aviso-tela, .instalar-tela, .demo-tela { padding-top: var(--e3); }
+}
